@@ -44,7 +44,7 @@ on:
   # this: https://github.community/t/triggering-a-new-workflow-from-another-workflow/16250
   workflow_run:
     workflows: ["GitHub Release"]
-    types: 
+    types:
       - completed
 
 jobs:
@@ -55,6 +55,10 @@ jobs:
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
+        with:
+          # Required due to the way Git works
+          # Without this the action won't be able to find the correct tags
+          fetch-depth: 0
 
       # If the GitHub release (and tag) failed, then this step will fail.
       - name: Read version tag
