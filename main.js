@@ -1,45 +1,59 @@
 const { exec } = require('child_process');
-exec('git rev-list --tags --max-count=1', (err, rev, stderr) => {
+
+function semVerSort(val1, val2) {
+    function arrayValueSort(arrayVal1, arrayVal2) {
+        if (arrayVal1.length == 0 && arrayVal2.length == 0) {
+            return 0
+        }
+        const component1 = arrayVal1[0] || 0
+        const component2 = arrayVal2[0] || 0
+
+        if (component1 < component2) {
+            return -1
+        } else if (component1 > component2) {
+            return 1
+        } else {
+            arrayVal1.shift()
+            arrayVal2.shift()
+            return arrayValueSort(arrayVal1, arrayVal2)
+        }
+    }
+
+    return arrayValueSort(val1.split('.'), val2.split('.'))
+}
+
+exec('git tag --points-at HEAD', (err, rev, stderr) => {
     if (err) {
         console.log('\x1b[33m%s\x1b[0m', 'Could not find any revisions because: ');
         console.log('\x1b[31m%s\x1b[0m', stderr);
         process.exit(1);
     }
 
-    rev = rev.trim()
+    versionTags = rev.trim()
+        .split("\n")
+        // Check for things that look like versions
+        .filter(function(val) {
+            return /v?[0-9.]+/.test(val);
+          }
+        )
+        // Remove leading "v"s
+        .map(function(val) {
+            return val.replace(/^v/, '');
+          }
+        )
+        .sort(semVerSort);
 
-    exec(`git describe --tags ${rev}`, (err, tag, stderr) => {
-        if (err) {
-            console.log('\x1b[33m%s\x1b[0m', 'Could not find any tags because: ');
-            console.log('\x1b[31m%s\x1b[0m', stderr);
-            if (process.env.INPUT_FALLBACK) {
-                let timestamp = Math.floor(new Date().getTime() / 1000);
-                console.log('\x1b[33m%s\x1b[0m', 'Falling back to default tag');
-                console.log('\x1b[32m%s\x1b[0m', `Found tag: ${process.env.INPUT_FALLBACK}`);
-                console.log('\x1b[32m%s\x1b[0m', `Found timestamp: ${timestamp}`);
-                console.log(`::set-output name=tag::${process.env.INPUT_FALLBACK}`);
-                console.log(`::set-output name=timestamp::${timestamp}`);
-                process.exit(0);
-            }
-            process.exit(1);
-        }
+    if (versionTags.length == 0) {
+        console.log('\x1b[33m%s\x1b[0m', 'Could not find any version tags');
+        process.exit(1);
+    }
+    
+    const version = versionTags[versionTags.length-1]
+    if (versionTags.length > 1) {
+        console.log('\x1b[33m%s\x1b[0m', `Multiple tags found (${versionTags.join(", ")}). Using latest: ${version}`);
+    }
 
-        tag = tag.trim()
-
-        exec(`git log -1 --format=%at ${tag}`, (err, timestamp, stderr) => {
-            if (err) {
-                console.log('\x1b[33m%s\x1b[0m', 'Could not find any timestamp because: ');
-                console.log('\x1b[31m%s\x1b[0m', stderr);
-                process.exit(1);
-            }
-
-            timestamp = timestamp.trim()
-
-            console.log('\x1b[32m%s\x1b[0m', `Found tag: ${tag}`);
-            console.log('\x1b[32m%s\x1b[0m', `Found timestamp: ${timestamp}`);
-            console.log(`::set-output name=tag::${tag}`);
-            console.log(`::set-output name=timestamp::${timestamp}`);
-            process.exit(0);
-        });
-    });
+    console.log(`::set-output name=version::${version}`);
+    console.log(`::set-output name=version-with-v::v${version}`);
+    process.exit(0);
 });

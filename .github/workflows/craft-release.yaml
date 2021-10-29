@@ -49,7 +49,7 @@ jobs:
       - generate-changelog
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Create release/${{ env.MILESTONE }} branch
         run: git checkout -b release/${{ env.MILESTONE }} ${GITHUB_SHA}
       - run: echo -e "${CHANGELOG}" > release-${{ env.MILESTONE }}-changelog.md

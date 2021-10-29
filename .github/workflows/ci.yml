@@ -2,11 +2,11 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
 jobs:
   get-previous-tag:
-    name: Test Get Previous Tag on ${{ matrix.os }}
+    name: Test Get Version Tag on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -16,20 +16,14 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v1
-      - name: 'Get Previous tag'
-        id: previoustag
+      - uses: actions/checkout@v2
+      
+      - run: git tag v0.1.0
+
+      - name: 'Get Version Tag'
+        id: versiontag
         uses: ./
-      - run: |
-          echo "${{ steps.previoustag.outputs.tag }}"
-      - name: Remove tags
-        uses: JesseTG/rm@v1.0.2
-        with:
-          path: .git/refs/tags
-      - name: 'Get Previous tag with fallback'
-        id: previoustagwithfallback
-        uses: ./
-        with:
-          fallback: v1.0.0
-      - run: |
-          echo "${{ steps.previoustagwithfallback.outputs.tag }}"
+
+      - run: git tag -d v0.1.0
+      
+      - run: echo "${{ steps.versiontag.outputs.version }}, ${{ steps.versiontag.outputs.version-with-v }}"

@@ -1,15 +1,13 @@
-name: 'Get Latest Tag'
-description: 'Get the latest tag from git and outputs that for use in other actions'
+name: 'Get Version Tag'
+description: 'Find the git tag that looks like a version and outputs that version for use in other actions'
 branding:
   icon: 'tag'
   color: 'gray-dark'
-inputs:
-  fallback:
-    description: 'Fallback tag to use when no previous tag can be found'
-    required: false
 outputs:
-  tag:
-    description: 'Latest tag'
+  version:
+    description: 'The version, without a leading "v"'
+  version-with-v:
+    description: 'The version, with a leading "v"'
 runs:
   using: 'node12'
   main: 'main.js'
