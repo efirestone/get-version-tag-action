@@ -48,7 +48,7 @@ exec('git tag --points-at HEAD', (err, rev, stderr) => {
         console.log("Ensure the tag was created, and that your GitHub checkout action includes the \"fetch-depth: 0\" parameter.");
         process.exit(1);
     }
-    
+
     const version = versionTags[versionTags.length-1]
     if (versionTags.length > 1) {
         console.log('\x1b[33m%s\x1b[0m', `Multiple tags found (${versionTags.join(", ")}). Using latest: ${version}`);
@@ -56,7 +56,7 @@ exec('git tag --points-at HEAD', (err, rev, stderr) => {
         console.log('Found version \x1b[34m%s\x1b[0m', version);
     }
 
-    console.log(`::set-output name=version::${version}`);
-    console.log(`::set-output name=version-with-v::v${version}`);
+    console.log(`{version}=${version} >> $GITHUB_OUTPUT`);
+    console.log(`{version-with-v}=v${version} >> $GITHUB_OUTPUT`);
     process.exit(0);
 });
