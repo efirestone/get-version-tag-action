@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Check out release tag
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Bumps the version number, creates a GitHub release, and tags this commit
       # with the new version number, like `refs/tag/v1.2.3`. This tag will then
@@ -54,7 +54,7 @@ jobs:
 
     steps:
       - name: Check out release tag
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           # Required due to the way Git works
           # Without this the action won't be able to find the correct tags

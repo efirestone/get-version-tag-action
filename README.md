@@ -26,7 +26,7 @@ name: Generate
 jobs:
   generate:
     steps:
-      - uses: actions/checkout@v2.2.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
 
@@ -46,7 +46,7 @@ for the structure of this project. Big thanks to him for the jumping off point.
 
 ## License ##
 
-Copyright 2021 [Eric Firestone](https://twitter.com/firetweet)
+Copyright 2023 [Eric Firestone](https://twitter.com/firetweet)
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
