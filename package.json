@@ -1,0 +1,18 @@
+{
+  "name": "get-version-tag-action",
+  "version": "1.0.0",
+  "description": "[![Continuous Integration](https://github.com/efirestone/get-version-tag-action/actions/workflows/ci.yml/badge.svg)](https://github.com/efirestone/get-version-tag-action/actions/workflows/ci.yml) [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/efirestone/get-version-tag-action?logo=github&sort=semver)](https://github.com/efirestone/get-version-tag-action/releases)",
+  "main": "main.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.10.0"
+  }
+}

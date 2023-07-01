@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const core = require('@actions/core');
 
 function semVerSort(val1, val2) {
     function arrayValueSort(arrayVal1, arrayVal2) {
@@ -56,7 +57,7 @@ exec('git tag --points-at HEAD', (err, rev, stderr) => {
         console.log('Found version \x1b[34m%s\x1b[0m', version);
     }
 
-    console.log(`version=${version} >> $GITHUB_OUTPUT`);
-    console.log(`version-with-v=v${version} >> $GITHUB_OUTPUT`);
+    core.setOutput('version', version)
+    core.setOutput('version-with-v', `v${version}`)
     process.exit(0);
 });
