@@ -25,5 +25,10 @@ jobs:
         uses: ./
 
       - run: git tag -d v0.1.0
-      
+
       - run: echo "${{ steps.versiontag.outputs.version }}, ${{ steps.versiontag.outputs.version-with-v }}"
+
+      - run: "[ \"${{ steps.versiontag.outputs.version }}\" = \"0.1.0\" ]"
+        shell: bash
+      - run: "[ \"${{ steps.versiontag.outputs.version-with-v }}\" = \"v0.1.0\" ]"
+        shell: bash
